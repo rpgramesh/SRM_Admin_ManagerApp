@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import '../utils/stripe_preferences.dart';
 
 class StripeService {
   static final StripeService _instance = StripeService._internal();
@@ -10,7 +11,7 @@ class StripeService {
   // Initialize Stripe configuration
   static Future<void> init() async {
     // Use the same publishable key for all platforms
-    String publishableKey = const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY', defaultValue: '');
+    String publishableKey = StripePreferences.stripePublishableKey;
     Stripe.publishableKey = publishableKey;
     await Stripe.instance.applySettings();
   }

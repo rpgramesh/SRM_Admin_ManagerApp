@@ -1,12 +1,4 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
 class StripeWebhookService {
-  static const String _webhookSecret =
-      String.fromEnvironment('STRIPE_WEBHOOK_SECRET', defaultValue: '');
-  static const String _stripeSecretKey =
-      String.fromEnvironment('STRIPE_SECRET_KEY', defaultValue: '');
-
   // Webhook endpoint handler (this would typically be on your backend)
   static Future<Map<String, dynamic>> handleWebhook(
     Map<String, dynamic> requestBody,
@@ -123,47 +115,15 @@ class StripeWebhookService {
     required String customerEmail,
     required String orderId,
   }) async {
-    final url = Uri.parse('https://api.stripe.com/v1/payment_intents');
-
-    final response = await http.post(
-      url,
-      headers: {
-        'Authorization': 'Bearer $_stripeSecretKey',
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: {
-        'amount': (amount * 100).toStringAsFixed(0), // Convert to cents
-        'currency': currency,
-        'receipt_email': customerEmail,
-        'metadata[order_id]': orderId,
-        'automatic_payment_methods[enabled]': 'true',
-      },
+    throw UnsupportedError(
+      'Create payment intents on your backend (never from a client app).',
     );
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to create payment intent: ${response.body}');
-    }
   }
 
   static Future<Map<String, dynamic>> confirmPayment(
       String paymentIntentId) async {
-    final url = Uri.parse(
-        'https://api.stripe.com/v1/payment_intents/$paymentIntentId/confirm');
-
-    final response = await http.post(
-      url,
-      headers: {
-        'Authorization': 'Bearer $_stripeSecretKey',
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+    throw UnsupportedError(
+      'Confirm payments from your backend / Stripe SDK flow; not via secret keys in the client.',
     );
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to confirm payment: ${response.body}');
-    }
   }
 }
