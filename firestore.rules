@@ -1,0 +1,114 @@
+rules_version = '2'
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read access to staff collection for authentication
+    match /staff/{staffId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        (request.auth.uid == staffId || 
+         get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role == 'manager');
+      allow create: if request.auth != null && 
+        get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role == 'manager';
+    }
+
+    // Roster management
+    match /rosters/{rosterId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null &&
+        get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role in ['manager','admin'];
+    }
+
+    match /shifts/{shiftId} {
+      allow read: if request.auth != null;
+      // Managers can create/update/cancel shifts
+      allow write: if request.auth != null &&
+        get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role in ['manager','admin'];
+    }
+
+    // Staff availability: staff can write their own, managers can write all
+    match /staff_availability/{availabilityId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (
+        get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role in ['manager','admin'] ||
+        request.resource.data.staffId == request.auth.uid
+      );
+    }
+
+    // Shift swap requests: staff create, manager approves/denies
+    match /shift_swap_requests/{requestId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null; // staff may request
+      allow update: if request.auth != null && (
+        get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role in ['manager','admin'] ||
+        resource.data.requesterId == request.auth.uid
+      );
+    }
+
+    // Allow read access to attendance collection
+    match /attendance/{attendanceId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        (request.auth.uid == resource.data.staffId ||
+         get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role == 'manager');
+    }
+
+    // Allow authenticated users to access their own data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Allow managers to manage orders
+    match /orders/{orderId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role in ['manager', 'waiter', 'admin'];
+    }
+
+    // Allow managers to manage menu items
+    match /menu/{itemId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role in ['manager', 'admin'];
+    }
+
+    // Allow managers to manage tables
+    match /tables/{tableId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role in ['manager', 'admin', 'waiter'];
+    }
+
+    // Loyalty Points Rules
+    match /loyalty_points/{pointId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow write: if false; // Only server-side operations
+    }
+
+    match /user_loyalty_data/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false; // Only server-side operations
+    }
+
+    match /loyalty_rewards/{rewardId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Only admin operations
+    }
+
+    // Promo Codes Rules
+    match /promo_codes/{promoId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Only admin operations
+    }
+
+    match /user_promo_usage/{usageId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow write: if false; // Only server-side operations
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
