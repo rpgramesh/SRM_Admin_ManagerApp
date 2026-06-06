@@ -41,7 +41,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: String.fromEnvironment('FIREBASE_API_KEY_WEB', defaultValue: ''),
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
     appId: '1:679661724443:web:b10c36dc4bc0a290dfe9be',
     messagingSenderId: '679661724443',
     projectId: 'delhinightsapps',
@@ -50,7 +50,7 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: String.fromEnvironment('FIREBASE_API_KEY_ANDROID', defaultValue: ''),
+    apiKey: 'AIzaSyDjVjlcUKYUBb62x5NXiUUZEsJEr6ZupPU',
     appId: '1:679661724443:android:d71267a88370293fdfe9be',
     messagingSenderId: '679661724443',
     projectId: 'delhinightsapps',
@@ -58,28 +58,30 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: String.fromEnvironment('FIREBASE_API_KEY_IOS', defaultValue: ''),
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
     appId: '1:679661724443:ios:b10c36dc4bc0a290dfe9be',
     messagingSenderId: '679661724443',
     projectId: 'delhinightsapps',
     storageBucket: 'delhinightsapps.appspot.com',
-    iosClientId: '679661724443-n2e6qvs0ks0cr0u1j7q0nhu3j5h5qvs1.apps.googleusercontent.com',
+    iosClientId:
+        '679661724443-n2e6qvs0ks0cr0u1j7q0nhu3j5h5qvs1.apps.googleusercontent.com',
     iosBundleId: 'com.example.restaurantApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: String.fromEnvironment('FIREBASE_API_KEY_MACOS', defaultValue: ''),
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
     appId: '1:679661724443:ios:b10c36dc4bc0a290dfe9be',
     messagingSenderId: '679661724443',
     projectId: 'delhinightsapps',
     storageBucket: 'delhinightsapps.appspot.com',
-    iosClientId: '679661724443-n2e6qvs0ks0cr0u1j7q0nhu3j5h5qvs1.apps.googleusercontent.com',
+    iosClientId:
+        '679661724443-n2e6qvs0ks0cr0u1j7q0nhu3j5h5qvs1.apps.googleusercontent.com',
     iosBundleId: 'com.example.restaurantApp',
   );
 
   // For Windows desktop, FlutterFire uses Web-style credentials.
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: String.fromEnvironment('FIREBASE_API_KEY_WINDOWS', defaultValue: ''),
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
     appId: '1:679661724443:web:b10c36dc4bc0a290dfe9be',
     messagingSenderId: '679661724443',
     projectId: 'delhinightsapps',
